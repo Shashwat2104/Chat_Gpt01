@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Content Generator</title>
+    <style>
+/* Reset default styles */
+body, h1, label, input, select, button, option {
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+/* Body styles */
+body {
+  font-size: 16px;
+  line-height: 1.6;
+  background-color: #f1f1f1;
+}
+
+/* Container styles */
+.container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+   /* Header styles */
+h1 {
+  margin: 0;
+  padding: 10px 0;
+  text-align: center;
+  color: #333333;
+  font-size: 24px;
+  border-bottom: 1px solid #cccccc;
+}
+
+/* Form styles */
+.container > div {
+  display: flex;
+  gap: 20px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+/* Select styles */
+select {
+  flex: 1;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  cursor: pointer;
+  appearance: none;
+}
+
+select::-ms-expand {
+  display: none; /* Remove the default arrow on IE */
+}
+
+/* Input styles */
+input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Button styles */
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #095ab7;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #064b96;
+}
+
+/* Output area styles */
+.output {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  color: #333333;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .container > div {
+    flex-direction: column;
+  }
+  
+  select, input[type="text"] {
+    width: 100%;
+  }
+}
+
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Content Generator</h1>
+      <div style="display: flex; gap: 20px; text-align: center; margin: 0 auto">
+        <div>
+          <label for="content">Content Type:</label>
+          <select id="content">
+            <option value="joke">Joke</option>
+            <option value="meme">Meme</option>
+            <option value="shayari">Shayari</option>
+            <option value="poems">Poems</option>
+          </select>
+        </div>
+        <br />
+        <div>
+          <label for="language">Language:</label>
+          <select id="language">
+            <option value="English">English</option>
+            <option value="Hindi">Hindi</option>
+            <option value="Spanish">Spanish</option>
+            <!-- Add more language options as needed -->
+          </select>
+        </div>
+      </div>
+      <br />
+      <input type="text" id="input" style="margin-bottom: 10px;" placeholder="What you want?"/>
+      <br />
+      <button onclick="generateContent()">Generate</button>
+      <div class="output" id="output"></div>
+    </div>
+
+    <script>
+      function generateContent() {
+        const content = document.getElementById("content").value;
+        const language = document.getElementById("language").value;
+        const input = document.getElementById("input").value;
+        const outputElement = document.getElementById("output");
+
+        // Make an HTTP request to the backend
+        fetch("http://localhost:4545/generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            content: content,
+            language: language,
+            input: input,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            // Display the generated content in the output element
+            outputElement.innerText = data.response;
+          })
+          .catch((error) => {
+            console.error(error);
+            outputElement.innerText =
+              "An error occurred while generating the content.";
+          });
+      }
+    </script>
+  </body>
+</html>
